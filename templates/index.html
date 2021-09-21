@@ -2,13 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+  <link type="text/css" href="{{url_for('static', filename='css/styles.css')}}" rel="stylesheet">
   <title>OpenCV test</title>
 </head>
 
 <body>
-    {% if image_to_show is not none %}
+    <header class="navbar">
+        <h1 style="color:red">Demo</h1>
+        <form action="/upload" method="post" enctype="multipart/form-data" >
+            <div align="center">
+                <label class="btn btn-default btn-file">
+                    Browse 
+                    <input type="file" name="image" style="display: none;">
+                </label>
+                <input type="submit" name="img_name" value="image_w_1x" class="btn btn-primary">
+
+                <label class="btn btn-default btn-file">
+                    Browse <input type="file" name="image" style="display: none;">
+                </label>
+                <input type="submit" name="img_name" value="image_b_1x" class="btn btn-primary">
+
+                <label class="btn btn-default btn-file">
+                    Browse 
+                    <input type="file" name="image" style="display: none;">
+                </label>
+                <input type="submit" name="img_name" value="image_w_8x" class="btn btn-primary">
+            </div>
+        </form>
+        <h2>{{ fname['image_w_1x'] }}</h2>
+        <h2>{{ fname['image_b_1x'] }}</h2>
+        <h2>{{ fname['image_w_8x'] }}</h2>
+    </header>
+
+    {% if images_to_show is not none %}
         <div>
-            <img src="{{ image_to_show }}">
+            <img class="image" src="{{ images_to_show['image_w_1x'] }}">
+            <img class="image" src="{{ images_to_show['image_b_1x'] }}">
+            <img class="image" src="{{ images_to_show['image_w_8x'] }}">
         </div>
     {% endif %}
+
+
+    <form action="/calculate" method="POST">
+        <button class="btn btn-primary">Calculate</button>
+    </form>
+
+    <div>
+        {% if res is not none %}
+            <h3>Result is: {{ res }}%</h3>
+            <img class="result-image" src="{{ result_img }}">
+        {% endif %}
+    </div>
 </body>
