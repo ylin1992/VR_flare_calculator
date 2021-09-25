@@ -55,6 +55,7 @@ def find_avg_intensity_around_contour(img, cnt):
     return np.sum(img[tmp_mask>0]) / (np.pi*r**2) / 4, tmp_mask
 
 def run(imWhite_1x, imBlack_1x, imWhite_8x):
+    
     result_img = imWhite_1x.copy()
 
     imWhite_1x = cv2.cvtColor(imWhite_1x, cv2.COLOR_BGR2GRAY)
