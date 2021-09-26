@@ -70,3 +70,8 @@
     border: #DBE6FD solid!important;
     color: #293B5F !important;
 }
+
+.upload-btn {
+    margin: 2rem;
+    font-weight: bolder;
+}

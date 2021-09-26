@@ -9,6 +9,7 @@ function UploadMulti() {
     const [images, setImages] = useState([]);
     const [formData, setFormData] = useState(new FormData());
     const [result, setResult] = useState(null)
+
     function handleOnChange(e){
         setResult(null);
         const tempImagesArr = [];
@@ -38,6 +39,32 @@ function UploadMulti() {
             setImages([]);
         })
         .catch(err => {
+            console.log(err);
+        })
+    }
+
+
+      
+    function handleSampleOnClick() {
+        axios.get("http://localhost:5000/load-sample")
+        .then( response => {
+            console.log(response.data)
+            setResult(null);
+            const tempImagesArr = [];
+            const tempFormData = new FormData();
+
+            //console.log(typeof(response.data[0].image))
+            //console.log(response.data[0].image.split(",")[1].trim())
+            for (let i = 0; i < 3; i++) {
+                tempImagesArr.push(response.data[i].image)
+                console.log(response.data[i].image)
+                //tempFormData.append(`image`,response.data[i])
+            }
+            setImages(tempImagesArr);
+            //setFormData(tempFormData);
+            setResult(null);
+        })
+        .catch( err => {
             console.log(err);
         })
     }
@@ -83,10 +110,15 @@ function UploadMulti() {
 
     return (
         <div id="images">
-            {!isLoading && <label className="btn btn-primary upload-btn">
-                Upload 3 images
-                <input type="file" name="images" onChange={handleOnChange} multiple hidden/>
-            </label>}
+            {!isLoading && 
+                <div>
+                    <label className="btn btn-primary upload-btn">
+                        Upload 3 images
+                        <input type="file" name="images" onChange={handleOnChange} multiple hidden/>
+                    </label>
+                    <button className="btn btn-primary upload-btn" onClick={handleSampleOnClick}>Load Sample Images</button>
+                </div>
+            }
             {isLoading && <LoadingSpinner />}
             {(!isLoading && images.length > 0 && result === null) && renderImages()}
             {(!isLoading && images.length > 0 && result === null) && renderButton()}
