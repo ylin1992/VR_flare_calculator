@@ -1,28 +1,29 @@
 import React, {useState} from 'react'
 import axios from 'axios';
+import {Container, Col, Row} from "react-bootstrap"
+import LoadingSpinner from './LoadingSpinner';
 function UploadMulti() {
 
+
+    const [isLoading, setIsLoading] = useState(false);
     const [images, setImages] = useState([]);
     const [formData, setFormData] = useState(new FormData());
     const [result, setResult] = useState(null)
     function handleOnChange(e){
         setResult(null);
-        console.log(e.target.files);
-        console.log(e.target.files[0]);
         const tempImagesArr = [];
         const tempFormData = new FormData();
         for (let i = 0; i < 3; i++) {
             tempImagesArr.push(URL.createObjectURL(e.target.files[i]))
             tempFormData.append(`image`,e.target.files[i])
-            console.log(tempImagesArr)
         }
         setImages(tempImagesArr);
         setFormData(tempFormData);
-        console.log("Form Data");
-        console.log(formData);
+        setResult(null);
     }
 
     function handleCalculateOnClick(){
+        setIsLoading(true);
         axios.post("http://localhost:5000/upload-files", 
         formData,
         {
@@ -33,6 +34,8 @@ function UploadMulti() {
         .then(response => {
             console.log(response);
             setResult(response.data);
+            setIsLoading(false);
+            setImages([]);
         })
         .catch(err => {
             console.log(err);
@@ -41,10 +44,20 @@ function UploadMulti() {
 
     function renderImages(){
         return (
-            <div>
-                <img src={images[0]} alt="" />
-                <img src={images[1]} alt="" />
-                <img src={images[2]} alt="" />
+            <div className="images-container">
+            <Container fluid>
+                <Row >
+                <Col sm={6} md lg={4}>
+                    <img className="images__upload" src={images[0]} alt="" />
+                </Col>
+                <Col sm={6} md lg={4}>
+                    <img className="images__upload" src={images[1]} alt="" />
+                </Col>
+                <Col sm={6} md lg={4}>
+                    <img className="images__upload" src={images[2]} alt="" />
+                </Col>
+                </Row>
+            </Container>
             </div>
         )
     }
@@ -52,7 +65,7 @@ function UploadMulti() {
     function renderButton() {
         return (
             <div>
-                <button onClick={handleCalculateOnClick}>
+                <button onClick={handleCalculateOnClick} className="btn btn-primary">
                     Calculate
                 </button>
             </div>
@@ -61,19 +74,22 @@ function UploadMulti() {
 
     function renderResult() {
         return (
-            <div>
+            <div id="result">
                 <h2>Result: {result.result}</h2>
-                <img src={result.result_image} alt="" /> 
+                <img className="images__result" src={result.result_image} alt="" /> 
             </div>
         )
     }
 
     return (
-        <div>
-            <input type="file" name="images" onChange={handleOnChange} multiple />
-        
-            {(images.length > 0 && result === null) && renderImages()}
-            {(images.length > 0 && result === null) && renderButton()}
+        <div id="images">
+            {!isLoading && <label className="btn btn-primary upload-btn">
+                Upload 3 images
+                <input type="file" name="images" onChange={handleOnChange} multiple hidden/>
+            </label>}
+            {isLoading && <LoadingSpinner />}
+            {(!isLoading && images.length > 0 && result === null) && renderImages()}
+            {(!isLoading && images.length > 0 && result === null) && renderButton()}
             {result !== null && renderResult()}
         </div>
     )

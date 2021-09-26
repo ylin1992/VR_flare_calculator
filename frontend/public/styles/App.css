@@ -1,0 +1,72 @@
+/* color theme : https://colorhunt.co/palette/293b5f47597edbe6fdb2ab8c */
+
+* {
+    background-color: #293B5F;
+    color:#B2AB8C;
+
+}
+
+.header-container{
+    font-family: 'Josefin Sans', sans-serif;
+    display: grid;
+    align-items: center;
+    padding: 2rem;
+}
+
+#header h1 {
+    font-size: 80px;
+    font-weight: bolder;
+}
+
+#images{
+    text-align: center;
+    position: relative;
+}
+
+.images-container{
+    padding-top: 2rem;
+    height: 500px;
+}
+
+.images__upload{
+    width: 100%;
+}
+
+.images__result{
+    width: 100%;
+}
+
+.images__result, .images__upload{
+    border-radius: 10%;
+}
+
+.browse-container{
+    color: white;
+    background: #175e9d;
+    border-radius: 3px;
+    cursor: grab;
+    width: 10vw;
+    height: 5vw;
+    vertical-align: middle;
+}
+
+
+.browse-container:hover{
+    background: #7fa4c4;
+    color: black
+}
+
+
+.browse{
+    opacity: 0;
+}
+
+#result {
+    padding: 2rem;
+}
+
+.btn-primary{
+    background-color: #B2AB8C !important;
+    border: #DBE6FD solid!important;
+    color: #293B5F !important;
+}
