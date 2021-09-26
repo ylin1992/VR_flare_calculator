@@ -12,8 +12,10 @@ Created on Thu Oct 15 10:07:01 2020
 # A map (cnt_mtx) is generated and a result image (rgb_img) is saved to the 
 # root file.
 # =============================================================================
+from re import L
 import numpy as np
 import cv2
+from numpy.lib.function_base import delete
 from . import filter as blm
 
 RATIO_E1_E3 = 8 
@@ -23,6 +25,8 @@ NUM_H, NUM_W = 7, 7
 VISUALIZATION_ON = False
 contour_x_limit = [800,3200]
 contour_y_limit = [400,2800]
+
+
 
 def find_avg_intensity_in_contour(img, cnt):
     M = cv2.moments(cnt)
@@ -54,6 +58,17 @@ def find_avg_intensity_around_contour(img, cnt):
 
     return np.sum(img[tmp_mask>0]) / (np.pi*r**2) / 4, tmp_mask
 
+def remove_adjacent_cnts(contours):
+    deleted = []
+    for i in range(len(contours)):
+        for j in range(i+1, len(contours)):
+            if (__dist(contours[i], contours[j]) < 20):
+                deleted.append(j)
+    return np.delete(contours, deleted)
+
+def __dist(cnt1, cnt2):
+    return ((cnt1[0] - cnt2[0])**2 + (cnt1[1] - cnt2[1])**2)**0.5
+
 def run(imWhite_1x, imBlack_1x, imWhite_8x):
     
     result_img = imWhite_1x.copy()
@@ -84,7 +99,8 @@ def run(imWhite_1x, imBlack_1x, imWhite_8x):
             cnt_center_list = np.c_[cnt_center_list,np.array((cX,cY))]
             cnt_list.append(c)
     cnt_center_list =cnt_center_list.transpose((1,0))[1::,:]
-
+    cnt_center_list = remove_adjacent_cnts(cnt_center_list)
+    print(cnt_center_list)
     ### Calculate average intensity within each contour
 
     cnt_info_list = []
